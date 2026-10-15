@@ -1,0 +1,10 @@
+/target
+*.pdb
+
+# Editor/tool state, not project source.
+/.lumina
+
+# A full copy of the crate plus the review's probe tests. Kept out of `target/` so a
+# `cargo clean` cannot delete it, and out of git so the tree does not carry two copies of
+# every source file. It builds into review-harness/target -- never this one.
+/review-harness

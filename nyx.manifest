@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+
+  <assemblyIdentity type="win32" name="Nyx.Terminal" version="0.1.0.0"/>
+
+  <!-- No elevation, ever. Nyx writes to %APPDATA% and HKCU and has no business asking for
+       administrator rights; a terminal that prompts on launch is a terminal nobody launches. -->
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <!-- Without these the OS applies its compatibility shims and lies about the Windows version. -->
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 and 11 share this GUID. -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/> <!-- 8.1  -->
+      <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/> <!-- 8    -->
+      <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/> <!-- 7    -->
+    </application>
+  </compatibility>
+
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!-- Declared here rather than called at startup.
+           `SetProcessDpiAwarenessContext` can only run after the process is already up, which
+           means the first window is created at the wrong scale and then corrected — a visible
+           flash, and on a 150% monitor a first frame whose cell metrics are 2/3 of the truth.
+           PerMonitorV2 (not PerMonitor) is what makes the non-client area, menus and dialogs
+           scale with the window when it is dragged between two monitors at different scales. -->
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <!-- The old key, for Windows 8.1, which does not read the one above. -->
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/PM</dpiAware>
+
+      <!-- Paths past 260 characters. A terminal is handed whatever path the user is standing in,
+           and node_modules alone goes past MAX_PATH routinely. Needs the machine-wide
+           LongPathsEnabled policy as well; without it this is simply inert. -->
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+
+      <!-- Makes the process code page UTF-8, so the narrow Win32 calls underneath anything we
+           link against agree with the UTF-8 we hand them. -->
+      <activeCodePage xmlns="http://schemas.microsoft.com/SMI/2019/WindowsSettings">UTF-8</activeCodePage>
+    </windowsSettings>
+  </application>
+
+</assembly>

@@ -1,0 +1,97 @@
+[package]
+name = "nyx"
+version = "0.1.0"
+edition = "2021"
+description = "Nyx terminal"
+license = "ISC"
+# Embeds nyx.manifest: per-monitor-v2 DPI and long-path awareness, both of which have to be
+# declared before the process starts rather than called at runtime.
+build = "build.rs"
+
+[dependencies]
+# --- shell / window / chrome ---
+eframe    = { version = "0.36.2", default-features = false, features = ["wgpu", "default_fonts"] }
+egui      = "0.36.2"
+egui-wgpu = "0.36.2"
+wgpu      = "30"
+
+# --- terminal grid text ---
+# glyphon re-exports cosmic_text. Never add cosmic-text as its own dependency: it can
+# resolve to a different patch than glyphon's and you get two FontSystem types that do
+# not unify, behind an error message about a hundred lines long.
+glyphon = "0.12.0"
+
+# --- VT emulation + ConPTY (its own tty module on Windows; portable-pty is not needed) ---
+alacritty_terminal = "0.26.0"
+
+# --- plumbing ---
+parking_lot       = "0.12"
+crossbeam-channel = "0.5"
+bytemuck          = { version = "1", features = ["derive"] }
+rustc-hash        = "2"
+anyhow            = "1"
+log               = "0.4"
+env_logger        = "0.11"
+
+# Owned rather than borrowed from egui's paste events: OSC 52 lets the shell both read and write
+# the clipboard programmatically, which egui's event-only model cannot express. Already in the
+# tree via eframe, so this costs no build time.
+arboard = "3"
+
+# Shortcut image uploads, decoded locally and cached by the UI.
+image = { version = "0.25", default-features = false, features = ["png", "bmp", "jpeg", "gif", "webp", "tiff", "ico", "pnm", "tga", "dds", "hdr", "exr", "qoi"] }
+
+# --- config ---
+serde = { version = "1", features = ["derive"] }
+toml  = "1"
+# Comment-preserving write-back. The plain `toml` crate parses into values and throws comments
+# away, so the settings GUI in Phase 7 would erase every comment in the user's own file the first
+# time it touched a colour.
+toml_edit = "0.25"
+notify    = "8"
+dirs      = "7"
+
+# --- Windows integration ---
+# `windows-sys`, not the typed `windows` crate the plan named. winit and alacritty_terminal
+# already put this exact version in the tree, so it costs no new crate, no download and no
+# version skew — and every call site in `win/` is an `unsafe` extern call either way, which is
+# the only thing the typed wrapper would have changed.
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",               # monitor work area, and the icon bitmaps
+    "Win32_Security",                   # SECURITY_ATTRIBUTES, passed as null throughout
+    "Win32_Storage_FileSystem",         # the client half of the named pipe
+    "Win32_System_Console",             # borrowing the launching console for --help
+    "Win32_System_IO",                  # OVERLAPPED, which gates ReadFile/WriteFile
+    "Win32_System_LibraryLoader",
+    "Win32_System_Pipes",
+    "Win32_System_Registry",            # the Explorer context menu, under HKCU only
+    "Win32_System_Threading",           # the single-instance mutex
+    "Win32_UI_Input_KeyboardAndMouse",  # RegisterHotKey
+    "Win32_UI_Controls_Dialogs",
+    "Win32_UI_Shell",                   # SHGetFileInfoW, for `icon = "exe:..."`
+    "Win32_UI_WindowsAndMessaging",
+] }
+# The trait that turns eframe's `Frame` into an HWND, so the hotkey thread can raise the window
+# itself rather than waiting for a frame. Already in the tree via eframe, and the version has to
+# stay matched to eframe's or the trait does not apply to its types.
+raw-window-handle = "0.6"
+
+resvg = "0.45"
+rodio = { version = "0.20", default-features = false, features = ["wav"] }
+
+[dev-dependencies]
+hound = "3.5"
+
+[profile.release]
+opt-level     = 3
+lto           = "fat"
+codegen-units = 1
+strip         = true
+# Deliberately NOT panic = "abort": a panicking PTY thread must kill one pane, not a
+# window with five other live shells in it.
+
+[profile.dev]
+opt-level = 1        # a debug-build terminal that cannot keep up is untestable
+[profile.dev.package."*"]
+opt-level = 3        # ...but dependencies (wgpu, cosmic-text) only need compiling once
