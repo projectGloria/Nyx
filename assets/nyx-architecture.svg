@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 380" width="100%" height="100%">
+  <defs>
+    <linearGradient id="archBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141724" />
+      <stop offset="100%" stop-color="#0b0d14" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f2336" />
+      <stop offset="100%" stop-color="#161826" />
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <style>
+    .mono { font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 11px; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .title { font-weight: 700; fill: #f0f2fb; font-size: 14px; }
+    .sub { fill: #7982a9; font-size: 11.5px; }
+  </style>
+
+  <!-- Background -->
+  <rect width="860" height="380" rx="14" fill="url(#archBg)" stroke="#22273d" stroke-width="1.5" />
+
+  <!-- Diagram Title -->
+  <g transform="translate(36, 32)">
+    <text x="0" y="0" class="sans" font-size="16" font-weight="700" fill="#7dcfff">Nyx Decoupled Architecture &amp; Frame Seams</text>
+    <text x="0" y="18" class="sans sub">ConPTY isolation, lock-free GridSnapshot seam, and unthrottled zero-latency input dispatch</text>
+  </g>
+
+  <!-- Column 1: Shell & ConPTY -->
+  <g transform="translate(36, 80)" filter="url(#cardShadow)">
+    <rect width="230" height="260" rx="10" fill="url(#cardGrad)" stroke="#2f354f" stroke-width="1.2" />
+    <rect width="230" height="34" rx="10" fill="#131522" />
+    <rect y="24" width="230" height="10" fill="#131522" />
+    <circle cx="18" cy="17" r="4" fill="#f7768e" />
+    <text x="32" y="21" class="sans title">Shell &amp; Host (term/)</text>
+
+    <g transform="translate(16, 50)">
+      <rect width="198" height="52" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="12" y="22" class="sans" font-weight="600" fill="#c0caf5" font-size="12">ConPTY Session</text>
+      <text x="12" y="38" class="sans sub">PowerShell / Bash / WSL</text>
+
+      <rect y="64" width="198" height="62" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="12" y="20" class="sans" font-weight="600" fill="#c0caf5" font-size="12" transform="translate(0,64)">Alacritty VT Engine</text>
+      <text x="12" y="36" class="sans sub" transform="translate(0,64)">Kitty keyboard protocol</text>
+      <text x="12" y="50" class="sans sub" transform="translate(0,64)">OSC 52 &amp; SGR mouse</text>
+
+      <rect y="138" width="198" height="52" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="12" y="22" class="sans" font-weight="600" fill="#c0caf5" font-size="12" transform="translate(0,138)">Repaint Coalescer</text>
+      <text x="12" y="38" class="sans sub" transform="translate(0,138)">Caps output at 60 Hz</text>
+    </g>
+  </g>
+
+  <!-- Flow Arrow 1 -> 2 (Snapshot Seam) -->
+  <g transform="translate(276, 170)">
+    <line x1="0" y1="0" x2="48" y2="0" stroke="#7dcfff" stroke-width="2.5" stroke-dasharray="4 4" />
+    <polygon points="46,-4 54,0 46,4" fill="#7dcfff" />
+    <rect x="-10" y="-24" width="70" height="18" rx="4" fill="#1c2b42" />
+    <text x="-4" y="-11" class="mono" fill="#7dcfff" font-size="9.5">Snapshot</text>
+  </g>
+
+  <!-- Column 2: The Core Frame & State -->
+  <g transform="translate(340, 80)" filter="url(#cardShadow)">
+    <rect width="210" height="260" rx="10" fill="url(#cardGrad)" stroke="#3b4261" stroke-width="1.2" />
+    <rect width="210" height="34" rx="10" fill="#131522" />
+    <rect y="24" width="210" height="10" fill="#131522" />
+    <circle cx="18" cy="17" r="4" fill="#bb9af7" />
+    <text x="32" y="21" class="sans title">The Frame (app/)</text>
+
+    <g transform="translate(14, 50)">
+      <rect width="182" height="52" rx="6" fill="#1a1e2f" stroke="#bb9af7" stroke-width="1" />
+      <text x="10" y="22" class="sans" font-weight="600" fill="#bb9af7" font-size="11.5">GridSnapshot Seam</text>
+      <text x="10" y="38" class="sans sub">Zero locks held at render</text>
+
+      <rect y="64" width="182" height="52" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="10" y="20" class="sans" font-weight="600" fill="#c0caf5" font-size="11.5" transform="translate(0,64)">Binary Split Tree</text>
+      <text x="10" y="36" class="sans sub" transform="translate(0,64)">Geometry &amp; Gutters</text>
+
+      <rect y="128" width="182" height="62" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="10" y="20" class="sans" font-weight="600" fill="#c0caf5" font-size="11.5" transform="translate(0,128)">Shadow Line Model</text>
+      <text x="10" y="36" class="sans sub" transform="translate(0,128)">@sigil &amp; alias lookup</text>
+      <text x="10" y="50" class="sans sub" transform="translate(0,128)">Terminal owns keyboard</text>
+    </g>
+  </g>
+
+  <!-- Flow Arrow 2 -> 3 (Render pass) -->
+  <g transform="translate(560, 170)">
+    <line x1="0" y1="0" x2="48" y2="0" stroke="#9ece6a" stroke-width="2.5" />
+    <polygon points="46,-4 54,0 46,4" fill="#9ece6a" />
+    <rect x="-8" y="-24" width="66" height="18" rx="4" fill="#1f3327" />
+    <text x="-2" y="-11" class="mono" fill="#9ece6a" font-size="9.5">Paint Pass</text>
+  </g>
+
+  <!-- Column 3: GPU Rendering -->
+  <g transform="translate(620, 80)" filter="url(#cardShadow)">
+    <rect width="204" height="260" rx="10" fill="url(#cardGrad)" stroke="#2f354f" stroke-width="1.2" />
+    <rect width="204" height="34" rx="10" fill="#131522" />
+    <rect y="24" width="204" height="10" fill="#131522" />
+    <circle cx="18" cy="17" r="4" fill="#9ece6a" />
+    <text x="32" y="21" class="sans title">GPU (render/)</text>
+
+    <g transform="translate(14, 50)">
+      <rect width="176" height="52" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="10" y="22" class="sans" font-weight="600" fill="#c0caf5" font-size="12">wgpu Hardware</text>
+      <text x="10" y="38" class="sans sub">DirectX 12 Low Latency</text>
+
+      <rect y="64" width="176" height="52" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="10" y="20" class="sans" font-weight="600" fill="#c0caf5" font-size="12" transform="translate(0,64)">Instanced Quads</text>
+      <text x="10" y="36" class="sans sub" transform="translate(0,64)">Cells &amp; selections</text>
+
+      <rect y="128" width="176" height="62" rx="6" fill="#131522" stroke="#22273d" />
+      <text x="10" y="20" class="sans" font-weight="600" fill="#c0caf5" font-size="12" transform="translate(0,128)">glyphon Text Cache</text>
+      <text x="10" y="36" class="sans sub" transform="translate(0,128)">cosmic-text glyph shaper</text>
+      <text x="10" y="50" class="sans sub" transform="translate(0,128)">Per-monitor V2 DPI</text>
+    </g>
+  </g>
+
+  <!-- Bottom Zero-Latency Keyboard Banner -->
+  <g transform="translate(36, 350)">
+    <text x="0" y="0" class="mono dim">⌨️ Keyboard Input Flow: <tspan fill="#7dcfff">Raw Key</tspan> → <tspan fill="#c0caf5">Popup Gating</tspan> → <tspan fill="#bb9af7">Leader Chord / App Binding</tspan> → <tspan fill="#9ece6a">Sigil Rewrite</tspan> → <tspan fill="#7dcfff">ConPTY</tspan> (Instant, Unthrottled &lt;0.2ms)</text>
+  </g>
+</svg>

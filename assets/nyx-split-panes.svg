@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="splitBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141724" />
+      <stop offset="100%" stop-color="#0e1018" />
+    </linearGradient>
+    <filter id="boxShadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <style>
+    .mono { font-family: 'Cascadia Code', Consolas, monospace; font-size: 11px; }
+    .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .title { font-weight: 700; fill: #f0f2fb; font-size: 13px; }
+    .sub { fill: #7982a9; font-size: 11px; }
+  </style>
+
+  <rect width="860" height="360" rx="14" fill="url(#splitBg)" stroke="#22273d" stroke-width="1.5" />
+
+  <!-- Title -->
+  <g transform="translate(36, 32)">
+    <text x="0" y="0" class="sans" font-size="16" font-weight="700" fill="#bb9af7">Binary Split Panes &amp; Dropdown Quake Mode</text>
+    <text x="0" y="18" class="sans sub">Dynamic binary space partitioning, directional Alt+Arrow focus navigation, and global toggle animation</text>
+  </g>
+
+  <!-- Left: Binary Split Representation -->
+  <g transform="translate(36, 75)" filter="url(#boxShadow)">
+    <rect width="460" height="250" rx="8" fill="#181a27" stroke="#2f354f" stroke-width="1.2" />
+    <rect width="460" height="28" rx="8" fill="#13141f" />
+    <rect y="20" width="460" height="8" fill="#13141f" />
+    <circle cx="16" cy="14" r="3.5" fill="#7dcfff" />
+    <text x="28" y="18" class="sans title" font-size="11.5">Pane Binary Tree (Layout Geometry)</text>
+
+    <!-- Split 1: Left Pane (Focused) -->
+    <g transform="translate(10, 38)">
+      <rect width="210" height="196" rx="6" fill="#1f2335" stroke="#7dcfff" stroke-width="1.5" />
+      <rect width="210" height="22" rx="6" fill="#24283b" />
+      <rect y="16" width="210" height="6" fill="#24283b" />
+      <text x="8" y="15" class="mono" fill="#7dcfff" font-weight="700">Pane 1 (Active) 🌟</text>
+      <text x="8" y="44" class="mono" fill="#9ece6a">$ git branch</text>
+      <text x="8" y="62" class="mono" fill="#c0caf5">* main</text>
+      <text x="8" y="80" class="mono" fill="#565f89">  feature/quake</text>
+      <text x="8" y="110" class="mono" fill="#e0af68">Alt+Right →</text>
+      <text x="8" y="128" class="sans sub">Switch focus geometrically</text>
+      <text x="8" y="154" class="mono dim">Ctrl+Shift+Z to Zoom</text>
+    </g>
+
+    <!-- Draggable Vertical Gutter -->
+    <line x1="228" y1="38" x2="228" y2="234" stroke="#565f89" stroke-width="2" stroke-dasharray="3 3" />
+    <circle cx="228" cy="136" r="4" fill="#7dcfff" />
+
+    <!-- Split 2 Top: Right-Top Pane -->
+    <g transform="translate(236, 38)">
+      <rect width="214" height="92" rx="6" fill="#141724" stroke="#24283b" />
+      <rect width="214" height="20" rx="6" fill="#1a1d2d" />
+      <rect y="14" width="214" height="6" fill="#1a1d2d" />
+      <text x="8" y="14" class="mono dim" font-weight="600">Pane 2: build log</text>
+      <text x="8" y="38" class="mono" fill="#9ece6a">Finished release build</text>
+      <text x="8" y="56" class="mono dim">17.3 MB binary</text>
+    </g>
+
+    <!-- Draggable Horizontal Gutter -->
+    <line x1="236" y1="136" x2="450" y2="136" stroke="#565f89" stroke-width="2" stroke-dasharray="3 3" />
+    <circle cx="343" cy="136" r="4" fill="#bb9af7" />
+
+    <!-- Split 3 Bottom: Right-Bottom Pane -->
+    <g transform="translate(236, 142)">
+      <rect width="214" height="92" rx="6" fill="#141724" stroke="#24283b" />
+      <rect width="214" height="20" rx="6" fill="#1a1d2d" />
+      <rect y="14" width="214" height="6" fill="#1a1d2d" />
+      <text x="8" y="14" class="mono dim" font-weight="600">Pane 3: htop / telemetry</text>
+      <text x="8" y="38" class="mono" fill="#7dcfff">CPU: 0.0% (Idle)</text>
+      <text x="8" y="56" class="mono" fill="#bb9af7">RAM: 38 MB private</text>
+    </g>
+  </g>
+
+  <!-- Right: Quake Dropdown Feature Box -->
+  <g transform="translate(520, 75)" filter="url(#boxShadow)">
+    <rect width="304" height="250" rx="8" fill="#181a27" stroke="#3b4261" stroke-width="1.2" />
+    <rect width="304" height="28" rx="8" fill="#13141f" />
+    <rect y="20" width="304" height="8" fill="#13141f" />
+    <circle cx="16" cy="14" r="3.5" fill="#9ece6a" />
+    <text x="28" y="18" class="sans title" font-size="11.5">Quake / Dropdown Console</text>
+
+    <!-- Screen simulation -->
+    <g transform="translate(18, 42)">
+      <!-- Monitor Frame -->
+      <rect width="268" height="136" rx="4" fill="#0c0e14" stroke="#24283b" />
+      <!-- Dropdown sliding window -->
+      <path d="M0 0 L268 0 L268 84 L0 84 Z" fill="#1a1b26" stroke="#7dcfff" stroke-width="1" />
+      <rect width="268" height="14" fill="#24283b" />
+      <text x="8" y="10" class="mono cyan" font-size="9">Nyx Quake Overlay (Global Hotkey)</text>
+      <text x="8" y="32" class="mono green" font-size="9.5">PS &gt; winget update</text>
+      <text x="8" y="48" class="mono dim" font-size="9">All packages up to date.</text>
+      <line x1="0" y1="84" x2="268" y2="84" stroke="#7dcfff" stroke-width="2" />
+      
+      <!-- Motion arrows -->
+      <path d="M134 86 L134 104 M128 98 L134 104 L140 98" stroke="#7dcfff" stroke-width="1.5" stroke-linecap="round" fill="none" />
+    </g>
+
+    <g transform="translate(18, 192)">
+      <text x="0" y="14" class="sans" font-size="12" font-weight="600" fill="#f0f2fb">Global Hotkey: <tspan fill="#7dcfff">Ctrl+`</tspan></text>
+      <text x="0" y="32" class="sans sub">Slides down from screen top anywhere in Windows.</text>
+      <text x="0" y="46" class="sans sub">Keeps state running in memory without taskbar clutter.</text>
+    </g>
+  </g>
+</svg>
