@@ -1,0 +1,9 @@
+id           = "Nyx"
+name         = "Nyx"
+version      = "0.1.0"
+main_exe     = "nyx.exe"
+icon         = "assets/nyx-icon.png"
+accent       = "#06b6d4"
+description  = "GPU-accelerated wgpu terminal emulator"
+needs_webview2 = false
+data_folders = ["%APPDATA%\\Nyx", "%LOCALAPPDATA%\\Nyx"]

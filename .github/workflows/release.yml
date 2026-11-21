@@ -1,0 +1,50 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  setup:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --release --locked
+        shell: pwsh
+
+      # Only nyx.exe is needed at run time. sounds\ and icons\ are optional user content that
+      # the app looks for beside the exe, and the repo ships none.
+      - name: Stage runtime files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force app-dist | Out-Null
+          Copy-Item target\release\nyx.exe app-dist\
+
+      - name: Make sure the release exists
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view $env:GITHUB_REF_NAME 2>$null | Out-Null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $env:GITHUB_REF_NAME --generate-notes
+            if ($LASTEXITCODE -ne 0) { throw 'could not create the release' }
+          }
+
+      - uses: projectGloria/GloriaSetup@v0.1.0
+        with:
+          app-dir: app-dist
+          manifest: gloria.toml
+          certificate: ${{ secrets.WINDOWS_PFX_BASE64 }}
+          certificate-password: ${{ secrets.WINDOWS_PFX_PASSWORD }}
