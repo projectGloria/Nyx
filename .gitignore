@@ -8,3 +8,4 @@
 # `cargo clean` cannot delete it, and out of git so the tree does not carry two copies of
 # every source file. It builds into review-harness/target -- never this one.
 /review-harness
+[Dd]esktop.ini
