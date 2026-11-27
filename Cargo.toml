@@ -95,3 +95,6 @@ strip         = true
 opt-level = 1        # a debug-build terminal that cannot keep up is untestable
 [profile.dev.package."*"]
 opt-level = 3        # ...but dependencies (wgpu, cosmic-text) only need compiling once
+
+[build-dependencies]
+embed-resource = "3"
